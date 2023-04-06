@@ -131,9 +131,15 @@ Restart-And-Run()
 
     Write-Output "Creating scheduled task trigger..."
     $trigger = New-ScheduledTaskTrigger -AtLogOn
+    
+    # Get the ID and security principal of the current user account
+    $myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $myWindowsPrincipal=new-object System.Security.Principal.WindowsPrincipal($myWindowsID)
+    $user = $myWIndowsPrincipal.Identities.Name
+    Write-Output "Using user $user for scheduled task registration"
 
     Write-Output "Registering script to re-run at next user logon..."
-    Register-ScheduledTask -TaskName $global:BootstrapTask -Action $action -Trigger $trigger -RunLevel Highest | Out-Null
+    Register-ScheduledTask -TaskName $global:BootstrapTask -Action $action -Trigger $trigger -User $user -RunLevel Highest | Out-Null
 
     try
     {
