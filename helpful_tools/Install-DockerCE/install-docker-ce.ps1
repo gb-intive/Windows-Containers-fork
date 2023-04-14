@@ -751,6 +751,7 @@ Wait-Docker()
 try
 {
     Install-ContainerHost
+    rm "$($env:ProgramData)\config\daemon.json" # Remove default config file to unbloc SF
 }
 catch 
 {
