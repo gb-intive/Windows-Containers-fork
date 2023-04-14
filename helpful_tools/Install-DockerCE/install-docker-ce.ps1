@@ -751,7 +751,8 @@ Wait-Docker()
 try
 {
     Install-ContainerHost
-    rm "$($env:ProgramData)\config\daemon.json" # Remove default config file to unbloc SF
+    Write-Output "Deleting default docker configuration file"
+    rm "$($env:ProgramData)\docker\config\daemon.json" # Remove default config file to unbloc SF
 }
 catch 
 {
