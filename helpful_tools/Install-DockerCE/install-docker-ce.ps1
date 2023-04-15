@@ -750,6 +750,19 @@ Wait-Docker()
 
 try
 {
+    # Install the required feature
+    Install-WindowsFeature -Name Containers
+
+    # Restart the VM
+    Restart-Computer -Force -Wait
+
+    # Wait for the VM to become available after the restart
+    do {
+      Start-Sleep -Seconds 5
+      $isOnline = Test-Connection -ComputerName localhost -Quiet -Count 1
+    } while (-not $isOnline)
+
+    # Perform the additional operation after the VM has restarted
     Install-ContainerHost
     Write-Output "Deleting default docker configuration file"
     rm "$($env:ProgramData)\docker\config\daemon.json" # Remove default config file to unbloc SF
